@@ -1,0 +1,35 @@
+clc
+clear
+close all
+
+res = 0.05;
+
+p = 100*res:res:20;
+f = 0.5;
+x = 0.1*(1-p) .* cos(2*pi*f*p);
+y = 0.3*(1-p) .* sin(2*pi*f*p) - 1*p;
+z_comp = x + 1i*y;
+z_vec = [x; y].';
+
+% plot(real(z_comp), imag(z_comp), '-*')
+% grid on
+
+thr = 0.2;
+D = pdist(z_vec);
+D = squareform(D);
+D = D + 100*eye(size(D));
+
+A = zeros(size(D));
+for i = 1:size(A, 1)
+    for j = 1
+
+
+
+amb = D < thr;
+figure; mesh(amb); view(2)
+% for i = 1:length(p)
+%     dis = abs(z - z(i));
+%     
+%     
+% end
+

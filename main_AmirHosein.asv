@@ -1,0 +1,20 @@
+clc
+clear
+close all
+
+%% Parameters
+N = 30; % number of antenna
+m = 1; % non overlap number of ant
+
+
+%% metal test ball
+freqs = [8, 9, 10]*1e9;
+for freq = freqs
+    
+    
+end
+
+
+
+
+%% target
