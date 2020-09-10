@@ -11,6 +11,7 @@ P.hr = 15;
 P.nAnt = 30;
 P.m = 1;
 P.SNR = 18;
+P.freqs = [8, 9, 10];
 P.fc = [9] * 1e9;
 P.lambda = 3e8 ./ P.fc;
 P.d = 3e8 / 9e9; % P.98 Thesis
@@ -35,13 +36,20 @@ for jj = 1:snapshot
 end
 
 logic_ind = AmbigutyPoints_func(deltaSigma);
+figure; grid on
+hold all; plot(real(deltaSigma),imag(deltaSigma), '-x')
+plot(real(deltaSigma(logic_ind)), imag(deltaSigma(logic_ind)), 'ro')
+title('Ambiguty points'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
 
+test_ball
 %%
 % figure; plot(P.ht,thetaD)
 % hold all; plot(P.ht,round(thetaEst1,2))
 % grid on; legend('true Angle','PCM Only')
 
-% hold all; plot(real(deltaSigma),imag(deltaSigma))
+% figure; grid on
+% hold all; plot(real(deltaSigma1),imag(deltaSigma1))
+% plot(real(deltaSigma1(logic_ind)), imag(deltaSigma1(logic_ind)), 'ro')
 
 
 
