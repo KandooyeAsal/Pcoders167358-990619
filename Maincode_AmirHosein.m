@@ -49,13 +49,16 @@ for h = 1:length(ht)
     thetaEst = [];
     
     P.ht = ht(h);
-    [signal,thetaD(h)] = TargetGeneration;
-    P.w = ones(P.nAnt-P.m,1);
     counter = 1;
-    for ff = P.freqs
-    [deltaSigma(counter) , thetaEst(counter)] = PCM(signal);
-    counter = counter + 1;
+    for ff = P.freqs 
+        P.fc = [ff] * 1e9;
+        P.lambda = 3e8 ./ P.fc;
+        [signal,thetaD(h)] = TargetGeneration;
+        P.w = ones(P.nAnt-P.m,1);
+        [deltaSigma(counter) , thetaEst(counter)] = PCM(signal);
+        counter = counter + 1;
     end
+    
     thetaEst_PCM_CFD(h) = mean(thetaEst);
     thetaEst_PCM_CFD2(h) = sum(thetaEst .* b.');
     deltaSigma(counter) = sum(deltaSigma .* b.');
