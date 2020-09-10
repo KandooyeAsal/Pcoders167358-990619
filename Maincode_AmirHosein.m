@@ -50,8 +50,10 @@ P.w = ones(P.nAnt-P.m,1);
 
 
 %% Cases
-
 thetaEst = Cases_func(deltaSigma);
+
+%% LCMV
 thetaR = Geometry(thetaEst);
 P.w = LCMV(thetaEst, thetaR);
 [deltaSigma1 , thetaEst1] = PCM(signal);
+
