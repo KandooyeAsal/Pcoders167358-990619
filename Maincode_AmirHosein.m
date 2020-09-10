@@ -1,6 +1,6 @@
 clc
 clear
-% close all
+close all
 
 global P
 
@@ -45,21 +45,39 @@ P.logic_ind_acc = logic_ind_acc;
 % creating target
 ht = 10:60;
 for h = 1:length(ht)
+    deltaSigma = [];
+    thetaEst = [];
+    
     P.ht = ht(h);
     [signal,thetaD(h)] = TargetGeneration;
     P.w = ones(P.nAnt-P.m,1);
-    [deltaSigma , thetaEst] = PCM(signal);
+    counter = 1;
+    for ff = P.freqs
+    [deltaSigma(counter) , thetaEst(counter)] = PCM(signal);
+    counter = counter + 1;
+    end
+    thetaEst_PCM_CFD(h) = mean(thetaEst);
+    thetaEst_PCM_CFD2(h) = sum(thetaEst .* b.');
+    deltaSigma(counter) = sum(deltaSigma .* b.');
     
     %% Three Cases
-    thetaEst = Cases_func(deltaSigma);
+    thetaEst_Cases(h) = Cases_func(deltaSigma);
     
     %% LCMV
-    thetaR = Geometry(thetaEst);
-    P.w = LCMV(thetaEst, thetaR);
+    thetaR = Geometry(thetaEst_Cases(h));
+    P.w = LCMV(thetaEst_Cases(h), thetaR);
     [deltaSigma1 , thetaEst1(h)] = PCM(signal);
     
 end
-figure; plot(ht,thetaD)
-hold all; plot(ht,thetaEst1)
+figure; plot(ht,thetaD, 'DisplayName', 'true angle')
+hold all;
+% plot(ht, thetaEst_PCM_CFD, 'DisplayName', 'PCM CFD mean')
+plot(ht, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD b')
+plot(ht, thetaEst_Cases, 'DisplayName', 'Cases')
+plot(ht, thetaEst1, 'DisplayName', 'LCMV', 'Linewidth', 2)
+legend('show', 'Location','southeast')
+grid on
+xlabel('height(m)')
+ylabel('Estimated angle(degree)')
 
 

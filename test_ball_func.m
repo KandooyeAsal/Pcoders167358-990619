@@ -19,9 +19,19 @@ end
 %% calculating b
 b = b_calculator_func(thetaD.', thetaEst_acc.');
 %% calculating optimal curve
-deltaSigma_opt = sum(deltaSigma_acc .* repmat(b, 1, size(deltaSigma_acc, 2)));
-deltaSigma_acc = [deltaSigma_acc; deltaSigma_opt];
+[thetaEst_acc, I] = sort(thetaEst_acc, 1);
+deltaSigma_acc = deltaSigma_acc(I);
 
 thetaEst_opt = sum(thetaEst_acc .* repmat(b, 1, size(thetaEst_acc, 2)));
 thetaEst_acc = [thetaEst_acc; thetaEst_opt];
+
+deltaSigma_opt = sum(deltaSigma_acc .* repmat(b, 1, size(deltaSigma_acc, 2)));
+deltaSigma_acc = [deltaSigma_acc; deltaSigma_opt];
+
+%%
+% figure; 
+% plot(real(deltaSigma_acc.'),imag(deltaSigma_acc.'))
+% hold all; plot(real(deltaSigma_opt),imag(deltaSigma_opt))
+% grid on; title('test ball curve'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
+
 end
