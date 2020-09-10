@@ -1,6 +1,6 @@
 clc
 clear
-close all
+% close all
 
 global P
 
@@ -19,7 +19,7 @@ P.lambda = 3e8 ./ P.fc;
 P.d = 3e8 / 9e9; % P.98 Thesis
 
 P.res = 0.0001;
-P.thetaS = -1+P.res:P.res:1;
+P.thetaS = -2+P.res:P.res:2;
 P.x = [0:P.nAnt-1] * P.d;
 P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
 
@@ -43,17 +43,23 @@ P.logic_ind_acc = logic_ind_acc;
 
 %% Target
 % creating target
-P.ht = 20;
-[signal,thetaD] = TargetGeneration;
-P.w = ones(P.nAnt-P.m,1);
-[deltaSigma , thetaEst] = PCM(signal);
+ht = 10:60;
+for h = 1:length(ht)
+    P.ht = ht(h);
+    [signal,thetaD(h)] = TargetGeneration;
+    P.w = ones(P.nAnt-P.m,1);
+    [deltaSigma , thetaEst] = PCM(signal);
+    
+    %% Three Cases
+    thetaEst = Cases_func(deltaSigma);
+    
+    %% LCMV
+    thetaR = Geometry(thetaEst);
+    P.w = LCMV(thetaEst, thetaR);
+    [deltaSigma1 , thetaEst1(h)] = PCM(signal);
+    
+end
+figure; plot(ht,thetaD)
+hold all; plot(ht,thetaEst1)
 
-
-%% Cases
-thetaEst = Cases_func(deltaSigma);
-
-%% LCMV
-thetaR = Geometry(thetaEst);
-P.w = LCMV(thetaEst, thetaR);
-[deltaSigma1 , thetaEst1] = PCM(signal);
 
