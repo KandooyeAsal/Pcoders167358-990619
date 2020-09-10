@@ -22,8 +22,8 @@ P.x = [0:P.nAnt-1] * P.d;
 P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
 
 P.thetaD = 1.5;
-snapshot = 1;
-for jj = 1:snapshot
+P.snapshot = 1;
+for jj = 1:P.snapshot
     [signal,thetaD] = TargetGeneration;
     for ii = 1:length(thetaD)
         P.w = ones(P.nAnt-P.m,1);

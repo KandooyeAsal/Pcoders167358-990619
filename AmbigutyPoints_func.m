@@ -1,9 +1,9 @@
 function logic_ind = AmbigutyPoints_func(deltaSigma1)
+global P
+
 z_vec = [real(deltaSigma1); imag(deltaSigma1)].';
 z_comp = deltaSigma1;
 
-thr = 0.001;
-thr_h = 5;
 D = pdist(z_vec);
 D = squareform(D);
 
@@ -14,14 +14,14 @@ h_different = squareform(h_different);
 A = zeros(size(D));
 for i = 1:size(A, 1)
     for j = 1:size(A, 2)
-        if abs(i - j) < thr_h
+        if abs(i - j) < P.thr_amb_h
             A(i, j) = 100;
         end
     end
 end
 
 D = D + A;
-amb = (D < thr);
+amb = (D < P.thr_amb);
 
 [indx, indy] = (ind2sub(size(amb), find(amb == 1)));
 ind = indx;
