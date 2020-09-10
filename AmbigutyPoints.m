@@ -23,8 +23,6 @@ i = 1:length(p);
 h_different = pdist(i.');
 h_different = squareform(h_different);
 
-
-
 A = zeros(size(D));
 for i = 1:size(A, 1)
     for j = 1:size(A, 2)
@@ -41,8 +39,6 @@ amb = (D < thr);
 % indx = unique(indx);
 % [indx_h, indy_h] = (ind2sub(size(amb_h), find(amb_h == 1)));
 % indx_h = unique(indx_h);
-% 
-
 
 % ind = intersect(indx, indx_h);
 
