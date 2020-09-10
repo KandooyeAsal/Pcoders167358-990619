@@ -47,10 +47,11 @@ test_ball
 % hold all; plot(P.ht,round(thetaEst1,2))
 % grid on; legend('true Angle','PCM Only')
 
-% figure; grid on
-% hold all; plot(real(deltaSigma1),imag(deltaSigma1))
-% plot(real(deltaSigma1(logic_ind)), imag(deltaSigma1(logic_ind)), 'ro')
-
+figure;
+hold all; plot(real(deltaSigma1),imag(deltaSigma1))
+plot(real(deltaSigma1(logic_ind)), imag(deltaSigma1(logic_ind)), 'ro')
+title('Curve using LCMV'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
+grid on
 
 
 

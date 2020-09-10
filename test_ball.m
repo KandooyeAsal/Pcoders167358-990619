@@ -19,7 +19,6 @@ b = b_calculator_func(thetaD.', thetaEst_acc.');
 %% calculating optimal curve
 deltaSigma_opt = sum(deltaSigma_acc .* repmat(b, 1, size(deltaSigma_acc, 2)));
 
-
 %%
 figure; 
 plot(real(deltaSigma_acc.'),imag(deltaSigma_acc.'))
