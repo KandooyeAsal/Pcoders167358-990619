@@ -1,18 +1,18 @@
 clc
-clear
-close all
+clear all
+% close all
 
 global P
 
 %% Initial Parameters
-
+P.iter = 100;
 P.R = 5e3;
 P.ht = 10:0.1:60;
 P.hr = 15;
 
 P.nAnt = 30;
 P.m = 1;
-P.SNR = 18;
+P.SNR = 100;
 P.freqs = [8, 9, 10];
 P.fc = [9] * 1e9;
 P.lambda = 3e8 ./ P.fc;
@@ -33,7 +33,6 @@ P.thr_amb_h = 5;
 [P.deltaSigma_acc, b , P.thetaEst_acc] = test_ball_func;
 
 %% Ambiguty Point
-
 logic_ind_acc = [];
 for i = 1:size(P.deltaSigma_acc, 1)
     logic_ind = AmbigutyPoints_func(P.deltaSigma_acc(i, :));
@@ -43,44 +42,51 @@ P.logic_ind_acc = logic_ind_acc;
 
 %% Target
 % creating target
-ht = 10:60;
-for h = 1:length(ht)
-    deltaSigma = [];
-    thetaEst = [];
-    
-    P.ht = ht(h);
-    counter = 1;
-    for ff = P.freqs 
-        P.fc = [ff] * 1e9;
-        P.lambda = 3e8 ./ P.fc;
-        [signal,thetaD(h)] = TargetGeneration;
-        P.w = ones(P.nAnt-P.m,1);
-        [deltaSigma(counter) , thetaEst(counter)] = PCM(signal);
-        counter = counter + 1;
+ht = 40;
+RR = [3:0.5:12]*1e3; %
+P.SNR = 6;
+
+for k = 1:P.iter
+    for h = 1:length(RR)
+        deltaSigma = [];
+        thetaEst = [];
+        P.ht = ht;
+        P.R = RR(h);
+        counter = 1;
+        for ff = P.freqs
+            P.fc = [ff] * 1e9;
+            P.lambda = 3e8 ./ P.fc;
+            [signal,thetaD(h)] = TargetGeneration;
+            P.w = ones(P.nAnt-P.m,1);
+            [deltaSigma(counter) , thetaEst(counter)] = PCM(signal);
+            counter = counter + 1;
+        end
+        
+        thetaEst_PCM_CFD(h) = mean(thetaEst);
+        thetaEst_PCM_CFD2(h) = sum(thetaEst .* b.');
+        deltaSigma(counter) = sum(deltaSigma .* b.');
+        
+        %% Three Cases
+        thetaEst_Cases(h) = Cases_func(deltaSigma);
+        
+        %% LCMV
+        thetaR(h) = Geometry(thetaEst_Cases(h));
+        P.w = LCMV(thetaEst_Cases(h), thetaR(h));
+        [deltaSigma1 , thetaEst1(h)] = PCM(signal);
     end
-    
-    thetaEst_PCM_CFD(h) = mean(thetaEst);
-    thetaEst_PCM_CFD2(h) = sum(thetaEst .* b.');
-    deltaSigma(counter) = sum(deltaSigma .* b.');
-    
-    %% Three Cases
-    thetaEst_Cases(h) = Cases_func(deltaSigma);
-    
-    %% LCMV
-    thetaR = Geometry(thetaEst_Cases(h));
-    P.w = LCMV(thetaEst_Cases(h), thetaR);
-    [deltaSigma1 , thetaEst1(h)] = PCM(signal);
-    
+    theta(:,:,k) = [thetaEst_PCM_CFD2 ; thetaEst_Cases ; thetaEst1];
 end
-figure; plot(ht,thetaD, 'DisplayName', 'true angle')
+STD = std(theta ,[], 3);
+
+%%
+figure; plot(RR,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
 hold all;
 % plot(ht, thetaEst_PCM_CFD, 'DisplayName', 'PCM CFD mean')
-plot(ht, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD b')
-plot(ht, thetaEst_Cases, 'DisplayName', 'Cases')
-plot(ht, thetaEst1, 'DisplayName', 'LCMV', 'Linewidth', 2)
+plot(RR, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD', 'Linewidth', 1)
+plot(RR, thetaEst_Cases, 'DisplayName', 'Cases', 'Linewidth', 1)
+plot(RR, thetaEst1, 'DisplayName', 'LCMV', 'Linewidth', 2)
 legend('show', 'Location','southeast')
 grid on
 xlabel('height(m)')
 ylabel('Estimated angle(degree)')
-
-
+figure; plot(STD.')

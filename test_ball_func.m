@@ -18,22 +18,23 @@ for ff = P.freqs
 end
 %% calculating b
 b = b_calculator_func(thetaD.', thetaEst_acc.');
+% b = [0.29 0.3 0.4].' - 0.1;
 %% calculating optimal curve
 [thetaEst_acc, I] = sort(thetaEst_acc, 1);
 for iii = 1:size(deltaSigma_acc, 2)
-deltaSigma_acc(:, iii) = deltaSigma_acc(I(:, iii), iii);
+    deltaSigma_acc1(:, iii) = deltaSigma_acc(I(:, iii), iii);
 end
 
 thetaEst_opt = sum(thetaEst_acc .* repmat(b, 1, size(thetaEst_acc, 2)));
 thetaEst_acc = [thetaEst_acc; thetaEst_opt];
 
-deltaSigma_opt = sum(deltaSigma_acc .* repmat(b, 1, size(deltaSigma_acc, 2)));
+deltaSigma_opt = sum(deltaSigma_acc1 .* repmat(b, 1, size(deltaSigma_acc1, 2)));
 deltaSigma_acc = [deltaSigma_acc; deltaSigma_opt];
 
 %%
-% figure; 
-% plot(real(deltaSigma_acc.'),imag(deltaSigma_acc.'))
-% hold all; plot(real(deltaSigma_opt),imag(deltaSigma_opt))
-% grid on; title('test ball curve'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
+figure;
+plot(real(deltaSigma_acc.'),imag(deltaSigma_acc.'))
+hold all; plot(real(deltaSigma_opt),imag(deltaSigma_opt))
+grid on; title('test ball curve'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
 
 end
