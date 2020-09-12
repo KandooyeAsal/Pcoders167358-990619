@@ -19,7 +19,7 @@ P.lambda = 3e8 ./ P.fc;
 P.d = 3e8 / 9e9; % P.98 Thesis
 
 P.res = 0.0001;
-P.thetaS = -2+P.res:P.res:2;
+P.thetaS = -1+P.res:P.res:1;
 P.x = [1:P.nAnt] * P.d;
 P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
 
