@@ -23,8 +23,8 @@ b = b_calculator_func(thetaD.', thetaEst_acc.');
 % b = [0.29 0.3 0.4].' - 0.1;
 %% calculating optimal curve
 [thetaEst_acc, I] = sort(thetaEst_acc, 1);
-for iii = 1:size(deltaSigma_acc, 2)
-    deltaSigma_acc1(:, iii) = deltaSigma_acc(I(:, iii), iii);
+for i = 1:size(deltaSigma_acc, 2)
+    deltaSigma_acc1(:, i) = deltaSigma_acc(I(:, i), i);
 end
 
 thetaEst_opt = sum(thetaEst_acc .* repmat(b, 1, size(thetaEst_acc, 2)));

@@ -1,11 +1,11 @@
 clc
-clear all
-% close all
+clear
+close all
 
 global P
 
 %% Initial Parameters
-P.iter = 1;
+P.iter = 100;
 P.R = 5e3;
 P.ht = 10:0.1:60;
 P.hr = 15;
@@ -87,18 +87,6 @@ end
 STD = std(theta ,[], 3);
 
 %%
-% figure; plot(RR,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
-% hold all;
-% % plot(ht, thetaEst_PCM_CFD, 'DisplayName', 'PCM CFD mean')
-% plot(RR, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD', 'Linewidth', 1)
-% plot(RR, thetaEst_Cases, 'DisplayName', 'Cases', 'Linewidth', 1)
-% plot(RR, thetaEst1, 'DisplayName', 'LCMV', 'Linewidth', 2)
-% legend('show', 'Location','southeast')
-% grid on
-% xlabel('height(m)')
-% ylabel('Estimated angle(degree)')
-% % figure; plot(STD.')
-
 figure; plot(RR,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
 hold all;
 % plot(ht, thetaEst_PCM_CFD, 'DisplayName', 'PCM CFD mean')
