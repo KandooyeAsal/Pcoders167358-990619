@@ -14,14 +14,14 @@ P.nAnt = 30;
 P.m = 1;
 P.SNR = 100;
 P.freqs = [8, 9, 10];
-P.fc = [9] * 1e9;
+P.fc = [8] * 1e9;
 P.lambda = 3e8 ./ P.fc;
-P.d = 3e8 / 9e9; % P.98 Thesis
+P.d = 3e8 / 8e9; % P.98 Thesis
 
 P.res = 0.0001;
 P.thetaS = -1+P.res:P.res:1;
 P.x = [1:P.nAnt] * P.d;
-P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
+% P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
 
 P.snapshot = 1;
 
@@ -56,9 +56,10 @@ for k = 1:P.iter
         for ff = P.freqs
             P.fc = [ff] * 1e9;
             P.lambda = 3e8 ./ P.fc;
-            [signal,thetaD(h)] = TargetGeneration;
+            P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
+            [signal(:,counter),thetaD(h)] = TargetGeneration;
             P.w = ones(P.nAnt-P.m,1);
-            [deltaSigma(counter) , thetaEst(counter)] = PCM(signal);
+            [deltaSigma(counter) , thetaEst(counter)] = PCM(signal(:,counter));
             counter = counter + 1;
         end
         
@@ -71,8 +72,15 @@ for k = 1:P.iter
         
         %% LCMV
         thetaREst(h) = Geometry(thetaEst_Cases(h));
-        P.w = LCMV(thetaEst_Cases(h), thetaREst(h));
-        [deltaSigma1 , thetaEst1(h)] = PCM(signal);
+        cnt = 1;
+        for ff = P.freqs
+            P.fc = [ff] * 1e9;
+            P.lambda = 3e8 ./ P.fc;
+            P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
+            P.w = LCMV(thetaEst_Cases(h), thetaREst(h));
+            [deltaSigma1 , thetaEst1(ff)] = PCM(signal(:,cnt));
+        end
+        thetaEst1(h) = mean(thetaEst1);
     end
     theta(:,:,k) = [thetaEst_PCM_CFD2 ; thetaEst_Cases ; thetaEst1];
 end

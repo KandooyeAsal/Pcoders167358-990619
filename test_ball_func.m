@@ -6,6 +6,8 @@ deltaSigma_acc = [];
 for ff = P.freqs
     P.fc = [ff] * 1e9;
     P.lambda = 3e8 ./ P.fc;
+    P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
+    
     for jj = 1:P.snapshot
         [signal,thetaD] = TargetGeneration;
         for ii = 1:length(thetaD)
