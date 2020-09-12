@@ -15,7 +15,7 @@ r2 = r - r1;
 
 R1 = sqrt(P.re^2 + (P.re + P.hr)^2 - 2*P.re*(P.re+P.hr) * cos(r1/P.re));
 R2 = sqrt(P.re^2 + (P.re + P.ht).^2 - 2*P.re*(P.re+P.ht) .* cos(r2/P.re));
-thetaR = -asind(P.hr./R1 + R1/2/P.re);
+thetaR = asind(P.hr./R1 + R1/2/P.re);
 thetaD = asind(((P.re+P.ht).^2 - P.R.^2 - (P.re + P.hr)^2)/2./P.R/(P.re+P.hr));
 
 psiG = asind(P.hr./R1 - R1/2/P.re);
@@ -35,7 +35,7 @@ sr = gamma .* divergCoef .* rhoS .* exp(-1i * deltaPhi) * sd;
 for i = 1:length(thetaD)
     [~,idxThetaD] = min(abs(P.thetaS - thetaD(i)));
     [~,idxThetaR] = min(abs(P.thetaS - thetaR(i)));
-    target = sd * P.steer(:,idxThetaD) + 0* sr(i) * P.steer(:,idxThetaR);
+    target = sd * P.steer(:,idxThetaD) +  sr(i) * P.steer(:,idxThetaR);
     noise = (randn(size(target)) + 1i * randn(size(target)))/sqrt(2*10^P.SNR/10);
     signal(:,i) = target + noise;
 end
