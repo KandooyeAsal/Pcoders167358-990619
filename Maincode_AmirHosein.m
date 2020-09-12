@@ -79,14 +79,33 @@ end
 STD = std(theta ,[], 3);
 
 %%
+% figure; plot(RR,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
+% hold all;
+% % plot(ht, thetaEst_PCM_CFD, 'DisplayName', 'PCM CFD mean')
+% plot(RR, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD', 'Linewidth', 1)
+% plot(RR, thetaEst_Cases, 'DisplayName', 'Cases', 'Linewidth', 1)
+% plot(RR, thetaEst1, 'DisplayName', 'LCMV', 'Linewidth', 2)
+% legend('show', 'Location','southeast')
+% grid on
+% xlabel('height(m)')
+% ylabel('Estimated angle(degree)')
+% % figure; plot(STD.')
+
 figure; plot(RR,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
 hold all;
 % plot(ht, thetaEst_PCM_CFD, 'DisplayName', 'PCM CFD mean')
 plot(RR, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD', 'Linewidth', 1)
 plot(RR, thetaEst_Cases, 'DisplayName', 'Cases', 'Linewidth', 1)
 plot(RR, thetaEst1, 'DisplayName', 'LCMV', 'Linewidth', 2)
-legend('show', 'Location','southeast')
+legend('show', 'Location','northeast')
 grid on
 xlabel('height(m)')
 ylabel('Estimated angle(degree)')
-% figure; plot(STD.')
+figure;
+hold on
+plot(RR, STD(1, :).', 'DisplayName', 'PCM_CFD2')
+plot(RR, STD(2, :).', 'DisplayName', 'Cases')
+plot(RR, STD(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
+legend('Show')
+hold off
+
