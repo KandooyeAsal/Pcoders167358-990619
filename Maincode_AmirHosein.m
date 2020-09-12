@@ -5,7 +5,7 @@ clear all
 global P
 
 %% Initial Parameters
-P.iter = 100;
+P.iter = 1;
 P.R = 5e3;
 P.ht = 10:0.1:60;
 P.hr = 15;
@@ -20,18 +20,18 @@ P.d = 3e8 / 9e9; % P.98 Thesis
 
 P.res = 0.0001;
 P.thetaS = -2+P.res:P.res:2;
-P.x = [0:P.nAnt-1] * P.d;
+P.x = [1:P.nAnt] * P.d;
 P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
 
 P.snapshot = 1;
 
-P.thr_amb = 0.001;
+P.thr_amb = 0.0001;
 P.thr_amb_h = 5;
 
 %% Test ball
 
 [P.deltaSigma_acc, b , P.thetaEst_acc] = test_ball_func;
-
+% b = [0.42 0.32 0.28]'
 %% Ambiguty Point
 logic_ind_acc = [];
 for i = 1:size(P.deltaSigma_acc, 1)
@@ -42,9 +42,9 @@ P.logic_ind_acc = logic_ind_acc;
 
 %% Target
 % creating target
-ht = 40;
-RR = [3:0.5:12]*1e3; %
-P.SNR = 6;
+ht = 50;
+RR = [3:0.1:12]*1e3; %
+P.SNR = 100;
 
 for k = 1:P.iter
     for h = 1:length(RR)
@@ -70,8 +70,8 @@ for k = 1:P.iter
         thetaEst_Cases(h) = Cases_func(deltaSigma);
         
         %% LCMV
-        thetaR(h) = Geometry(thetaEst_Cases(h));
-        P.w = LCMV(thetaEst_Cases(h), thetaR(h));
+        thetaREst(h) = Geometry(thetaEst_Cases(h));
+        P.w = LCMV(thetaEst_Cases(h), thetaREst(h));
         [deltaSigma1 , thetaEst1(h)] = PCM(signal);
     end
     theta(:,:,k) = [thetaEst_PCM_CFD2 ; thetaEst_Cases ; thetaEst1];
@@ -89,4 +89,4 @@ legend('show', 'Location','southeast')
 grid on
 xlabel('height(m)')
 ylabel('Estimated angle(degree)')
-figure; plot(STD.')
+% figure; plot(STD.')

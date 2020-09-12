@@ -15,30 +15,29 @@ r2 = r - r1;
 
 R1 = sqrt(P.re^2 + (P.re + P.hr)^2 - 2*P.re*(P.re+P.hr) * cos(r1/P.re));
 R2 = sqrt(P.re^2 + (P.re + P.ht).^2 - 2*P.re*(P.re+P.ht) .* cos(r2/P.re));
-thetaR = asind(P.hr./R1 + R1/2/P.re);
+thetaR = -asind(P.hr./R1 + R1/2/P.re);
 thetaD = asind(((P.re+P.ht).^2 - P.R.^2 - (P.re + P.hr)^2)/2./P.R/(P.re+P.hr));
 
 psiG = asind(P.hr./R1 - R1/2/P.re);
 epsC = e - 1i * 60 * P.lambda * sigma;
-gamma = (sind(psiG) - sqrt(epsC - cosd(psiG).^2))/(sind(psiG) + sqrt(epsC - cosd(psiG).^2));
-
+gamma = (sind(psiG) - sqrt(epsC - cosd(psiG).^2))./(sind(psiG) + sqrt(epsC - cosd(psiG).^2));
 deltaPhi = - 2 * pi * (P.R - (R1 + R2))/P.lambda;
 gamma2 = sigmaH * sind(psiG)/P.lambda;
 idx = gamma2 <= 0.1;
 rhoS(idx) = exp(-2*(2*pi*gamma2(idx)).^2);
 rhoS(~idx) = 0.812537./(1 + 2 * (2*pi * gamma2(~idx)).^2);
 
-divergCoef = (1 + 2 * r1 .* r2/P.re./r/sind(psiG)).^(-0.5);
+divergCoef = (1 + 2 * r1 .* r2/P.re./r./sind(psiG)).^(-0.5);
 
 sd = 1;
-sr = gamma * divergCoef * rhoS .* exp(-1i * deltaPhi) * sd;
+sr = gamma .* divergCoef .* rhoS .* exp(-1i * deltaPhi) * sd;
 
 for i = 1:length(thetaD)
     [~,idxThetaD] = min(abs(P.thetaS - thetaD(i)));
     [~,idxThetaR] = min(abs(P.thetaS - thetaR(i)));
-    target = sd * P.steer(:,idxThetaD) + sr(i) * P.steer(:,idxThetaR);
+    target = sd * P.steer(:,idxThetaD) + 0* sr(i) * P.steer(:,idxThetaR);
     noise = (randn(size(target)) + 1i * randn(size(target)))/sqrt(2*10^P.SNR/10);
-    signal(:,i) = target/max(abs(target)) + noise;
+    signal(:,i) = target + noise;
 end
 
 end
