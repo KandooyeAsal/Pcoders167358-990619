@@ -25,15 +25,15 @@ theta_new = thetaEst_acc.' * b;
 plot(theta_new, 'Linewidth', 2)
 % b = [0.29 0.3 0.4].' - 0.1;
 %% calculating optimal curve
-% [thetaEst_acc, I] = sort(thetaEst_acc, 1);
-% for i = 1:size(deltaSigma_acc, 2)
-%     deltaSigma_acc1(:, i) = deltaSigma_acc(I(:, i), i);
-% end
+[thetaEst_acc, I] = sort(thetaEst_acc, 1);
+for i = 1:size(deltaSigma_acc, 2)
+    deltaSigma_acc1(:, i) = deltaSigma_acc(I(:, i), i);
+end
 
 thetaEst_opt = sum(thetaEst_acc .* repmat(b, 1, size(thetaEst_acc, 2)));
 thetaEst_acc = [thetaEst_acc; thetaEst_opt];
 
-deltaSigma_opt = sum(deltaSigma_acc .* repmat(b, 1, size(deltaSigma_acc, 2)));
+deltaSigma_opt = sum(deltaSigma_acc1 .* repmat(b, 1, size(deltaSigma_acc1, 2)));
 deltaSigma_acc = [deltaSigma_acc; deltaSigma_opt];
 
 %%
