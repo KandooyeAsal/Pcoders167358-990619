@@ -37,6 +37,7 @@ for rr = P.Ranges
             for ii = 1:length(thetaD)
                 P.w = ones(P.nAnt-P.m,1);
                 [deltaSigma(ii) , thetaEst(ii)] = PCM(signal(:,ii));
+%                 P.ht = 60;
                 thetaREst(ii) = Geometry(thetaEst(ii));
                 P.w = LCMV(thetaEst(ii),thetaREst(ii));
                 W(:,ii) = P.w;
