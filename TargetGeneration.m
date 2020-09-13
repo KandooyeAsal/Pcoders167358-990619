@@ -35,7 +35,7 @@ sr = gamma .* divergCoef .* rhoS .* exp(-1i * deltaPhi) * sd;
 for i = 1:length(thetaD)
     [~,idxThetaD] = min(abs(P.thetaS - thetaD(i)));
     [~,idxThetaR] = min(abs(P.thetaS - thetaR(i)));
-    target = sd * P.steer(:,idxThetaD) + 1 * sr(i) * P.steer(:,idxThetaR);
+    target = sd * P.steer(:,idxThetaD) + 0 * sr(i) * P.steer(:,idxThetaR);
     noise = (randn(size(target)) + 1i * randn(size(target)))/sqrt(2*10^(P.SNR/10));
     signal(:,i) = target + noise;
 end

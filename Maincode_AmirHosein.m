@@ -12,7 +12,7 @@ P.hr = 15;
 
 P.nAnt = 30;
 P.m = 1;
-P.SNR = 100;
+P.SNR = 18;
 P.freqs = [8, 9, 10];
 P.fc = [9] * 1e9;
 P.lambda = 3e8 ./ P.fc;
@@ -43,8 +43,13 @@ P.logic_ind_acc = logic_ind_acc;
 %% Target
 % creating target
 ht = 40;
+<<<<<<< Updated upstream
 RR = [3:0.1:12]*1e3; %
 P.SNR = 28;
+=======
+RR = [3:1:12]*1e3; %
+P.SNR = 18;
+>>>>>>> Stashed changes
 
 for k = 1:P.iter
     for h = 1:length(RR)
@@ -98,11 +103,11 @@ legend('show', 'Location','northeast')
 grid on
 xlabel('height(m)')
 ylabel('Estimated angle(degree)')
-figure;
-hold on
-plot(RR, STD(1, :).', 'DisplayName', 'PCM_CFD2')
-plot(RR, STD(2, :).', 'DisplayName', 'Cases')
-plot(RR, STD(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
-legend('Show')
-hold off
-
+% figure;
+% hold on
+% plot(RR, STD(1, :).', 'DisplayName', 'PCM_CFD2')
+% plot(RR, STD(2, :).', 'DisplayName', 'Cases')
+% plot(RR, STD(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
+% legend('Show')
+% hold off
+% 
