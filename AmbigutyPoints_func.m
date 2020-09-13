@@ -30,9 +30,11 @@ logic_ind(unique(ind)) = 1;
 logic_ind = logical(logic_ind);
 
 %% plotting ambiguty area
-% plot(real(z_comp), imag(z_comp), '-*')
+% figure;
+% plot(real(z_comp), imag(z_comp))
 % grid on
 % hold on
-% plot(real(z_comp(logic_ind)), imag(z_comp(logic_ind)), 'ro')
+% plot(real(z_comp(logic_ind)), imag(z_comp(logic_ind)), 'o')
+% axis equal
 
 end
