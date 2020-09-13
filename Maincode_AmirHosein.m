@@ -116,3 +116,74 @@ plot(RR, STD(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
 legend('Show')
 hold off
 
+%% snr figure
+clear theta diff STD
+P.iter = 30;
+P.ht = 45;
+P.R = 6000; %
+counter_snr = 1;
+SNRs = 5:5:30;
+for snr_iter = SNRs
+    P.SNR = snr_iter;
+    for k = 1:P.iter
+        deltaSigma = [];
+        thetaEst = [];
+        counter = 1;
+        
+        for ff = P.freqs
+            P.fc = [ff] * 1e9;
+            P.lambda = 3e8 ./ P.fc;
+            P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
+            [signal(:,counter),thetaD] = TargetGeneration;
+            P.w = ones(P.nAnt-P.m,1);
+            [deltaSigma(counter) , thetaEst(counter)] = PCM(signal(:,counter));
+            counter = counter + 1;
+        end
+        
+        thetaEst_PCM_CFD = mean(thetaEst);
+        thetaEst_PCM_CFD2 = sum(thetaEst .* b.');
+        deltaSigma(counter) = sum(deltaSigma .* b.');
+        
+        %% Three Cases
+        
+        thetaEst_Cases = Cases_func(deltaSigma);
+        
+        %% LCMV
+        thetaREst = Geometry(thetaEst_Cases);
+        cnt = 1;
+        
+        for ff = P.freqs
+            P.fc = [ff] * 1e9;
+            P.lambda = 3e8 ./ P.fc;
+            P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
+            P.w = LCMV(thetaEst_Cases, thetaREst);
+            [deltaSigma1 , thetaEst11(cnt)] = PCM(signal(:,cnt));
+            cnt = cnt+1;
+        end
+        thetaEst1 = sum(thetaEst11 .* b.');
+        
+        theta(:,k) = [thetaEst_PCM_CFD2 ; thetaEst_Cases ; thetaEst1];
+        k
+    end
+    diff(:, counter_snr) = (mean(theta - thetaD,2));
+    STD(:, counter_snr) = std(theta ,[], 2);
+    counter_snr = counter_snr + 1;
+end
+
+figure; hold on
+plot(SNRs, diff(1, :), 'DisplayName', 'PCM - CFD')
+plot(SNRs, diff(2, :), 'DisplayName', 'Cases')
+plot(SNRs, diff(3, :), 'DisplayName', 'LCMV', 'Linewidth', 2)
+title('diff')
+legend('show')
+xlabel('SNR')
+grid on
+
+figure; hold on
+plot(SNRs, STD(1, :), 'DisplayName', 'PCM - CFD')
+plot(SNRs, STD(2, :), 'DisplayName', 'Cases')
+plot(SNRs, STD(3, :), 'DisplayName', 'LCMV', 'Linewidth', 2)
+title('STD')
+legend('show')
+xlabel('SNR')
+grid on
