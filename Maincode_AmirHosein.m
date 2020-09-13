@@ -1,6 +1,6 @@
 clc
 clear
-% close all
+close all
 
 global P
 
@@ -25,8 +25,8 @@ P.x = [1:P.nAnt] * P.d;
 
 P.snapshot = 1;
 
-P.thr_amb = 0.0001;
-P.thr_amb_h = 5;
+P.thr_amb = 0.001;
+P.thr_amb_h = 20;
 
 %% Test ball
 
@@ -38,13 +38,13 @@ for i = 1:size(P.deltaSigma_acc, 1)
     logic_ind = AmbigutyPoints_func(P.deltaSigma_acc(i, :));
     logic_ind_acc = [logic_ind_acc; logic_ind];
 end
-P.logic_ind_acc = logic_ind_acc;
+P.logic_ind_acc = logical(logic_ind_acc);
 
 %% Target
 % creating target
 ht = 40;
 RR = [3:0.1:12]*1e3; %
-P.SNR = 28;
+P.SNR = 100;
 
 for k = 1:P.iter
     for h = 1:length(RR)
