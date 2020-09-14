@@ -165,8 +165,9 @@ for snr_iter = SNRs
         theta(:,k) = [thetaEst_PCM_CFD2 ; thetaEst_Cases ; thetaEst1];
         k
     end
-    diff(:, counter_snr) = (mean(theta - thetaD,2));
-    STD(:, counter_snr) = std(theta ,[], 2);
+    diff(:, counter_snr) = (1/P.iter)*sqrt(sum((theta - thetaD).^2, 2));
+%         diff(:, counter_snr) = abs(mean(theta - thetaD));
+%     STD(:, counter_snr) = std(theta ,[], 2);
     counter_snr = counter_snr + 1;
 end
 
@@ -179,11 +180,11 @@ legend('show')
 xlabel('SNR')
 grid on
 
-figure; hold on
-plot(SNRs, STD(1, :), 'DisplayName', 'PCM - CFD')
-plot(SNRs, STD(2, :), 'DisplayName', 'Cases')
-plot(SNRs, STD(3, :), 'DisplayName', 'LCMV', 'Linewidth', 2)
-title('STD')
-legend('show')
-xlabel('SNR')
-grid on
+% figure; hold on
+% plot(SNRs, STD(1, :), 'DisplayName', 'PCM - CFD')
+% plot(SNRs, STD(2, :), 'DisplayName', 'Cases')
+% plot(SNRs, STD(3, :), 'DisplayName', 'LCMV', 'Linewidth', 2)
+% title('STD')
+% legend('show')
+% xlabel('SNR')
+% grid on
