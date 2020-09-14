@@ -1,11 +1,11 @@
 clc
-clear all
-% close all
+clear
+close all
 
 global P
 
 %% Initial Parameters
-P.iter = 3;
+P.iter = 40;
 P.R = 5e3;
 P.ht = 10:0.1:60;
 P.hr = 15;
@@ -44,16 +44,17 @@ P.logic_ind_acc = logical(logic_ind_acc);
 
 %% Target
 % creating target
-ht = 40;
-RR = [3:3:12]*1e3; %
+ht = 10:0.1:60;
+RR = 5e3; %
+
 P.SNR = 28;
 for k = 1:P.iter
-    for h = 1:length(RR)
+    for h = 1:length(ht)
         
         deltaSigma = [];
         thetaEst = [];
-        P.ht = ht;
-        P.R = RR(h);
+        P.ht = ht(h);
+        P.R = RR;
         counter = 1;
         
         for ff = P.freqs
@@ -95,16 +96,17 @@ for k = 1:P.iter
     theta(:,:,k) = [thetaEst_PCM_CFD2 ; thetaEst_Cases ; thetaEst1];
     k
 end
+theta_LCMV = mean(theta(3,:,:),3);
 RMSE = sqrt(mean((theta - thetaD).^2,3));
 % STD = std(theta ,[], 3);
 
 %%
-figure; plot(RR,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
+figure; plot(ht,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
 hold all;
 % plot(ht, thetaEst_PCM_CFD, 'DisplayName', 'PCM CFD mean')
-plot(RR, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD', 'Linewidth', 1)
-plot(RR, thetaEst_Cases, 'DisplayName', 'Cases', 'Linewidth', 1)
-plot(RR, mean(theta(3,:,:),3), 'DisplayName', 'LCMV', 'Linewidth', 2)
+plot(ht, thetaEst_PCM_CFD2, 'DisplayName', 'PCM CFD', 'Linewidth', 1)
+plot(ht, thetaEst_Cases, 'DisplayName', 'Cases', 'Linewidth', 1)
+plot(ht, theta_LCMV, 'DisplayName', 'LCMV', 'Linewidth', 2)
 legend('show', 'Location','northeast')
 grid on
 xlabel('height(m)')
@@ -112,9 +114,9 @@ ylabel('Estimated angle(degree)')
 
 figure;
 hold on
-plot(RR, RMSE(1, :).', 'DisplayName', 'PCM_CFD2')
-plot(RR, RMSE(2, :).', 'DisplayName', 'Cases')
-plot(RR, RMSE(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
+plot(ht, RMSE(1, :).', 'DisplayName', 'PCM_CFD2')
+plot(ht, RMSE(2, :).', 'DisplayName', 'Cases')
+plot(ht, RMSE(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
 legend('Show')
 hold off
 
