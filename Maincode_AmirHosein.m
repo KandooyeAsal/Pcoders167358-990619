@@ -5,7 +5,7 @@ clear all
 global P
 
 %% Initial Parameters
-P.iter = 30;
+P.iter = 3;
 P.R = 5e3;
 P.ht = 10:0.1:60;
 P.hr = 15;
@@ -45,7 +45,7 @@ P.logic_ind_acc = logical(logic_ind_acc);
 %% Target
 % creating target
 ht = 40;
-RR = [3:0.1:12]*1e3; %
+RR = [3:3:12]*1e3; %
 P.SNR = 28;
 for k = 1:P.iter
     for h = 1:length(RR)
@@ -75,26 +75,28 @@ for k = 1:P.iter
         thetaEst_Cases(h) = Cases_func(deltaSigma);
         
         %% LCMV
-        thetaREst(h) = Geometry(thetaEst_Cases(h));
-        cnt = 1;
-        
-        for ff = P.freqs
-            P.fc = [ff] * 1e9;
-            P.lambda = 3e8 ./ P.fc;
-            P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
-            P.w = LCMV(thetaEst_Cases(h), thetaREst(h));
-            [deltaSigma1 , thetaEst11(cnt)] = PCM(signal(:,cnt));
-            cnt = cnt+1;
+        thetaEst_Cases1 = thetaEst_Cases(h);
+        for ll = 1:10
+            thetaREst(h) = Geometry(thetaEst_Cases1);
+            cnt = 1;
+            
+            for ff = P.freqs
+                P.fc = [ff] * 1e9;
+                P.lambda = 3e8 ./ P.fc;
+                P.steer = exp(-1i * 2*pi * P.x' / P.lambda * sind(P.thetaS));
+                P.w = LCMV(thetaEst_Cases(h), thetaREst(h));
+                [deltaSigma1 , thetaEst11(cnt)] = PCM(signal(:,cnt));
+                cnt = cnt+1;
+            end
+            thetaEst1(h) = sum(thetaEst11 .* b.');
+            thetaEst_Cases1 = thetaEst1(h);
         end
-        
-        thetaEst1(h) = sum(thetaEst11 .* b.');
-        
     end
     theta(:,:,k) = [thetaEst_PCM_CFD2 ; thetaEst_Cases ; thetaEst1];
     k
 end
-diff = mean(theta - thetaD,3)
-STD = std(theta ,[], 3);
+RMSE = sqrt(mean((theta - thetaD).^2,3));
+% STD = std(theta ,[], 3);
 
 %%
 figure; plot(RR,thetaD, 'DisplayName', 'true angle', 'Linewidth', 1)
@@ -110,9 +112,9 @@ ylabel('Estimated angle(degree)')
 
 figure;
 hold on
-plot(RR, STD(1, :).', 'DisplayName', 'PCM_CFD2')
-plot(RR, STD(2, :).', 'DisplayName', 'Cases')
-plot(RR, STD(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
+plot(RR, RMSE(1, :).', 'DisplayName', 'PCM_CFD2')
+plot(RR, RMSE(2, :).', 'DisplayName', 'Cases')
+plot(RR, RMSE(3, :).', 'DisplayName', 'LCMV', 'Linewidth', 2)
 legend('Show')
 hold off
 
