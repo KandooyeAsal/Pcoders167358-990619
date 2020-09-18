@@ -5,7 +5,7 @@ close all
 global P
 
 %% Initial Parameters
-P.iter = 10;
+P.iter = 3;
 % P.R = 5e3; 
 P.ht = 10:0.1:60;
 P.hr = 15;
@@ -30,6 +30,7 @@ P.thr_amb_h = 20;
 
 %% Test ball
 P.Rs = (3:3:12)*1e3;
+% P.Rs = 5e3;
 for counter_R = 1:length(P.Rs)
 P.R = P.Rs(counter_R); 
 [P.deltaSigma_acc_R(:, :, counter_R), b_R(:, counter_R) , P.thetaEst_acc_R(:, :, counter_R)] = test_ball_func;
@@ -42,7 +43,7 @@ logic_ind_acc_R = [];
 for counter_R = 1:length(P.Rs)
     P.R = P.Rs(counter_R); 
     logic_ind_acc = [];
-    for i = 1:size(P.deltaSigma_acc, 1)
+    for i = 1:size(P.deltaSigma_acc_R, 1)
         logic_ind = AmbigutyPoints_func(P.deltaSigma_acc_R(i, :, counter_R));
         logic_ind_acc = [logic_ind_acc; logic_ind];
     end
@@ -54,7 +55,7 @@ P.logic_ind_acc_R = logical(logic_ind_acc_R);
 %% Target
 % creating target
 ht = 40;
-RR = [3:1:12]*1e3; %
+RR = [3:0.2:12]*1e3; %
 P.SNR = 28;
 for k = 1:P.iter
     for h = 1:length(RR)

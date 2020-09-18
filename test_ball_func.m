@@ -22,10 +22,14 @@ end
 b = b_calculator_func(thetaD.', thetaEst_acc.');
 
 %% figure
-% figure; plot(thetaEst_acc.'); hold on; plot(thetaD.')
+b = [0.41 0.30 0.29]';
+% figure;
+% plot(thetaEst_acc.'); hold on; plot(thetaD.')
 % theta_new = thetaEst_acc.' * b;
 % plot(theta_new, 'Linewidth', 2)
+% title(['Range = ', num2str(P.R)])
 % % b = [0.29 0.3 0.4].' - 0.1;
+
 %% calculating optimal curve
 [thetaEst_acc, I] = sort(thetaEst_acc, 1);
 for i = 1:size(deltaSigma_acc, 2)
@@ -39,10 +43,10 @@ deltaSigma_opt = sum(deltaSigma_acc1 .* repmat(b, 1, size(deltaSigma_acc1, 2)));
 deltaSigma_acc = [deltaSigma_acc; deltaSigma_opt];
 
 %%
-figure;
-plot(real(deltaSigma_acc.'),imag(deltaSigma_acc.'), '-x')
-hold all; plot(real(deltaSigma_opt),imag(deltaSigma_opt), 'k-x')
-grid on; title('test ball curve'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
-title(['Range = ', num2str(P.R)])
+% figure;
+% plot(real(deltaSigma_acc.'),imag(deltaSigma_acc.'), '-x')
+% hold all; plot(real(deltaSigma_opt),imag(deltaSigma_opt), 'k-x')
+% grid on; title('test ball curve'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
+% title(['Range = ', num2str(P.R)])
 
 end
