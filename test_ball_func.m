@@ -20,9 +20,13 @@ for ff = P.freqs
 end
 %% calculating b
 b = b_calculator_func(thetaD.', thetaEst_acc.');
+% b = [0.41 0.30 0.29]'; this gives better results
 
 %% figure
-b = [0.41 0.30 0.29]';
+
+
+
+
 % figure;
 % plot(thetaEst_acc.'); hold on; plot(thetaD.')
 % theta_new = thetaEst_acc.' * b;
