@@ -43,10 +43,16 @@ deltaSigma_opt = sum(deltaSigma_acc1 .* repmat(b, 1, size(deltaSigma_acc1, 2)));
 deltaSigma_acc = [deltaSigma_acc; deltaSigma_opt];
 
 %%
-% figure;
+figure; hold all
 % plot(real(deltaSigma_acc.'),imag(deltaSigma_acc.'), '-x')
-% hold all; plot(real(deltaSigma_opt),imag(deltaSigma_opt), 'k-x')
-% grid on; title('test ball curve'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
-% title(['Range = ', num2str(P.R)])
+plot(real(deltaSigma_acc(1, :)), imag(deltaSigma_acc(1, :)), 'r-x', 'DisplayName', 'f1')
+plot(real(deltaSigma_acc(2, :)), imag(deltaSigma_acc(2, :)), 'g-x', 'DisplayName', 'f2')
+plot(real(deltaSigma_acc(3,  :)), imag(deltaSigma_acc(3, :)), 'b-x', 'DisplayName', 'f3')
+
+
+hold all; plot(real(deltaSigma_opt),imag(deltaSigma_opt), 'k-x', 'DisplayName', 'optimal curve')
+grid on; title('test ball curve'); xlabel('real(detlaSigma)'); ylabel('imag(deltaSigma)');
+title(['Range = ', num2str(P.R)])
+legend('show')
 
 end
